@@ -22,9 +22,9 @@ class Blockchain {
         let blockchain = this;
         blockchain.getBlockcahinHeight((err, height) => {
             if (err) {
-                blockchain.addBlock(new Block('First block in the chain - Genesis block')).then((v)=>{
+                blockchain.addBlock(new Block('First block in the chain - Genesis block')).then((v) => {
                     console.log(v)
-                }).catch((e)=>{console.log('error',e)})
+                }).catch((e) => { console.log('error', e) })
             }
             else {
                 console.log('Genesis block already exist')
@@ -137,7 +137,7 @@ class Blockchain {
     }
     //add block to the chain
     async putBlockSync(block, height) {
-        db.put('blockchainHeight',height, (err)=>{
+        db.put('blockchainHeight', height, (err) => {
             db.put(`block${height}`, block, (err) => {
                 if (err) throw new Error(err)
                 else return ''
@@ -163,25 +163,28 @@ class Blockchain {
     async validateChain() {
         let errorLog = [];
         let chainHight = await this.getBlockcahinHeightSync();
-        for (var i = 0; i < chainHight; i++) {
+        for (var i = 0; i <= chainHight; i++) {
             // validate block
             let validBlock = await this.validateBlock(i);
             if (!validBlock) {
                 errorLog.push(i);
             }
-            // compare blocks hash link
-            let block = await this.getBlockSync(i);
-            let blockHash = block.hash
-            let nextBlock = await this.getBlockSync(i + 1);
-            let previousHash = nextBlock.previousBlockHash;
-            if (blockHash !== previousHash) {
-                errorLog.push(i);
+            //dont compare blocks hash link for last block
+            if (i != chainHight) {
+                // compare blocks hash link
+                let block = await this.getBlockSync(i);
+                let blockHash = block.hash
+                let nextBlock = await this.getBlockSync(i + 1);
+                let previousHash = nextBlock.previousBlockHash;
+                if (blockHash !== previousHash) {
+                    errorLog.push(i);
+                }
             }
         }
         if (errorLog.length > 0) {
             // console.log('Block errors = ' + errorLog.length);
             // console.log('Blocks: ' + errorLog);
-            throw new Error('In blocks:'+errorLog);
+            throw new Error('In blocks:' + errorLog);
         } else {
             // console.log('No errors detected');
             return 'No errors detected'
