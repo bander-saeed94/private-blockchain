@@ -1,21 +1,27 @@
 
 To test code:
+
 1: Open a command prompt or shell terminal after install node.js.
+
 2: Enter a node session, also known as REPL (Read-Evaluate-Print-Loop).
 ```
 node
 ```
 3: Copy and paste your code into your node session (index.js)
+
 4: Instantiate blockchain with blockchain variable
 ```
 let bc = new Blockchain();
 ```
+
 5: Generate 10 blocks using a for loop
 ```
 bc.addBlock(new Block('test1')).then(()=>{return bc.addBlock(new Block('test2'))}).then(()=>{return bc.addBlock(new Block('test3'))}).then(()=>{return bc.addBlock(new Block('test4'))}).then(()=>{return bc.addBlock(new Block('test5'))}).then(()=>{return bc.addBlock(new Block('test6'))}).then(()=>{return bc.addBlock(new Block('test7'))}).then(()=>{return bc.addBlock(new Block('test8'))}).then(()=>{return bc.addBlock(new Block('test9'))});
 ```
 6: Validate blockchain
+```
 bc.validateChain().then( (v)=> console.log(v)).catch((e)=>console.log(e));
+```
 
 7: Induce errors by changing block data
 ```
