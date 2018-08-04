@@ -22,7 +22,7 @@ function deleteAllBlocksAndBlockHieght() {
     const chainDB = './chainData'
     const db = level(chainDB, { valueEncoding: 'json' });
     let i = 0;
-    db.get('blockchainHeight', (err, val) => {
+    db.get('blockHeight', (err, val) => {
         if (err) console.log(err)
         else {
             for (i = 0; i <= val; i++) {
@@ -30,7 +30,7 @@ function deleteAllBlocksAndBlockHieght() {
                     if (err) console.log(err)
                 })
             }
-            db.del('blockchainHeight', (err) => {
+            db.del('blockHeight', (err) => {
                 if (err) console.log(err)
             })
         }

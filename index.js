@@ -20,7 +20,7 @@ class Block {
 class Blockchain {
     constructor() {
         let blockchain = this;
-        blockchain.getBlockcahinHeight((err, height) => {
+        blockchain.getBlockHeight((err, height) => {
             if (err) {
                 blockchain.addBlock(new Block('First block in the chain - Genesis block')).then((v) => {
                     console.log(v)
@@ -36,7 +36,7 @@ class Blockchain {
         //CHECK IF persist
         // console.log(this.getBlock(0))
         let blockchain = this;
-        //if no genisi will get error 
+        //if no genisi will get undefined 
         let genesisBlock = await blockchain.getBlockSync(0);
         if (genesisBlock == undefined) {
             newBlock.height = 0;
@@ -44,16 +44,16 @@ class Blockchain {
             // newBlock.previousBlockHash = ''
             newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
             let block = await blockchain.putBlockSync(newBlock, newBlock.height);
-            return 'Genesis Block Added:' + JSON.parse(JSON.stringify(newBlock));
+            return 'Genesis Block Added:' + JSON.stringify(newBlock);
         }
         else {
-            let blockchainHeight = await blockchain.getBlockcahinHeightSync();
-            newBlock.height = blockchainHeight + 1;
+            let blockHeight = await blockchain.getBlockHeightSync();
+            newBlock.height = blockHeight + 1;
             newBlock.previousBlockHash = await blockchain.getPreviousBlockHashSync(newBlock.height)
             newBlock.time = new Date().getTime().toString().slice(0, -3);
             newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
             let block = await blockchain.putBlockSync(newBlock, newBlock.height);
-            return 'Block Added:' + JSON.parse(JSON.stringify(newBlock));
+            return 'Block Added:' + JSON.stringify(newBlock);
         }
     }
     //get block by height
@@ -75,37 +75,36 @@ class Blockchain {
             return undefined
         }
     }
-    getBlock(blockHeight) {
-        //return promise
+    getBlock(blockHeight, cb) {
         db.get(`block${blockHeight}`, (err, block) => {
-            if (err) console.log(err)
-            else return block
+            if (err) cb(err)
+            else cb(null, block)
         })
     }
 
     //get blockchain height
     //this is getBlockHeight
-    getBlockcahinHeightWrapper() {
+    getBlockHeightWrapper() {
         //return promise
         return new Promise((resolve, reject) => {
-            db.get(`blockchainHeight`, (err, blockchainHeight) => {
+            db.get(`blockHeight`, (err, blockHeight) => {
                 if (err) reject(err)
-                else resolve(blockchainHeight)
+                else resolve(blockHeight)
             })
         })
     }
     //used in add block
-    async  getBlockcahinHeightSync() {
+    async  getBlockHeightSync() {
         try {
-            let blockchainHeight = await this.getBlockcahinHeightWrapper();
-            return blockchainHeight
+            let blockHeight = await this.getBlockHeightWrapper();
+            return blockHeight
         } catch (err) {
             return undefined;
         }
     }
     //used in constrctor
-    getBlockcahinHeight(cb) {
-        db.get('blockchainHeight', (err, height) => {
+    getBlockHeight(cb) {
+        db.get('blockHeight', (err, height) => {
             if (err) cb(err)
             else cb(null, height)
         })
@@ -137,7 +136,7 @@ class Blockchain {
     }
     //add block to the chain
     async putBlockSync(block, height) {
-        db.put('blockchainHeight', height, (err) => {
+        db.put('blockHeight', height, (err) => {
             db.put(`block${height}`, block, (err) => {
                 if (err) throw new Error(err)
                 else return ''
@@ -162,7 +161,7 @@ class Blockchain {
     // Validate blockchain
     async validateChain() {
         let errorLog = [];
-        let chainHight = await this.getBlockcahinHeightSync();
+        let chainHight = await this.getBlockHeightSync();
         for (var i = 0; i <= chainHight; i++) {
             // validate block
             let validBlock = await this.validateBlock(i);

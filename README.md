@@ -48,3 +48,6 @@ InduceErrorsToBlock(7,'hello')
 bc.validateChain().then( (v)=> console.log(v)).catch((e)=>console.log(e));
 ```
 
+9: get block:
+bc.getBlock(0,(err,block)=>console.log(block))
+
