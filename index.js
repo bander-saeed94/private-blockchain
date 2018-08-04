@@ -181,9 +181,9 @@ class Blockchain {
             }
         }
         if (errorLog.length > 0) {
-            // console.log('Block errors = ' + errorLog.length);
-            // console.log('Blocks: ' + errorLog);
-            throw new Error('In blocks:' + errorLog);
+            console.log('Block errors = ' + errorLog.length);
+            console.log('Blocks: ' + errorLog);
+            return 'Error: In blocks:' + errorLog;
         } else {
             // console.log('No errors detected');
             return 'No errors detected'
