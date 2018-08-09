@@ -1,6 +1,6 @@
 
 To test code:
-
+[![HitCount](http://hits.dwyl.io/bander-saeed/private-blockchain.svg)](http://hits.dwyl.io/bander-saeed/private-blockchain)
 1: Open a command prompt or shell terminal after install node.js.
 
 2: Enter a node session, also known as REPL (Read-Evaluate-Print-Loop).
